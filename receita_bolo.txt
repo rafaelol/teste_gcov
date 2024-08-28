@@ -1,0 +1,23 @@
+https://testing.googleblog.com/2020/08/code-coverage-best-practices.html
+
+rm -rf ./bin
+mkdir bin
+
+rm -rf ./objects
+mkdir objects
+
+g++ --coverage -c -o objects/biblioteca.o src/biblioteca.cpp
+
+g++ -c -o objects/absoluto.o t/biblioteca/absoluto.cpp
+g++ -c -o objects/vezes_dois.o t/biblioteca/vezes_dois.cpp
+
+g++ --coverage -o bin/absoluto objects/biblioteca.o objects/absoluto.o -lboost_unit_test_framework
+g++ --coverage -o bin/vezes_dois objects/biblioteca.o objects/vezes_dois.o -lboost_unit_test_framework
+
+./bin/absoluto
+./bin/vezes_dois
+
+gcov -b *.gcno
+mkdir lcov-report
+lcov --capture --directory . --output-file lcov-report/coverage.info
+genhtml lcov-report/coverage.info --output-directory lcov-report
